@@ -15,7 +15,7 @@ export async function atualizaCampeonatoParcial(id, campos) {
     const colunas = Object.keys(campos).map(campo => `${campo} = ?`).join(", "); // campeao = ?, vice = ?, ...
     const valores = Object.values(campos);
     
-    const query = `UPADATE campeonatos SET ${colunas} WHERE id = ?`;
+    const query = `UPDATE campeonatos SET ${colunas} WHERE id = ?`;
     valores.push(id);
     const [resposta] = await conexao.execute(query, valores);
     console.log(resposta);
