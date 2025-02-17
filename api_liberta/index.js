@@ -1,13 +1,30 @@
 import cors from 'cors';
 import express from 'express';
+// import pool from './servico/conexao.js';
 import { retornaCampeonatos, retornaCampeonatosID, retornaCampeonatosAno, retornaCampeonatosTime } from './servico/retornaCampeonatos_servico.js';
 import { cadastraCampeonato } from './servico/cadastroCampeonato_sevico.js';
 import { atualizaCampeonato, atualizaCampeonatoParcial } from './servico/atualizaCampeonato_servico.js';
-// import pool from './servico/conexao.js';
+import { deletaCampeonato } from './servico/deletaCampeonato_servico.js';
 
 const app = express();
 app.use(cors());
 app.use(express.json());//suporte para JSON no corpo (body) da requisição
+
+app.delete('/campeonatos/:id', async (req, res) => {
+    const {id} =  req.params; //desestruturação
+
+    if (isNaN(id)) {
+        res.status(404).send("Parâmetro inválido");
+    } else {
+        const resultado = await deletaCampeonato(id);
+        
+        if (resultado.affectedRows > 0) {
+            res.status(202).send("Registro deletado com sucesso");
+        } else {
+            res.status(404).send("Registro não encontrado")
+        }
+    }
+})
 
 app.patch('/campeonatos/:id', async (req, res) => {
     const { id } = req.params;
